@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.SignalR;
+using RpcServer.Abp;
 using Signarl.Performance.Core;
 
 namespace Signarl.Performance.Server;
@@ -31,6 +32,7 @@ public sealed class ChatHub : Hub
         LoginPackage request)
     {
         //
+        PackageHostServer.PackageCount++;
         return ValueTask.FromResult(Package);
     }
 }
