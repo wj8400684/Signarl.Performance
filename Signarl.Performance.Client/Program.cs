@@ -5,28 +5,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Signarl.Performance.Client;
 using Signarl.Performance.Core;
 
-//var protocol = new HubMessageProtocol();
-
-// var client = new EasyClient<HubMessage, HubMessage>(new HubPipeLineFilter
-// {
-//     Decoder = protocol,
-// }, protocol).AsClient();
-//
-// await client.ConnectAsync(new IPEndPoint(IPAddress.Loopback, 5000));
-//
-// await client.SendAsync(new HandshakeRequestMessage("messagepack", 1));
-// var message = await client.ReceiveAsync();
-// Console.ReadKey();
-
-//
 //
 var hub = new HubConnectionBuilder()
     .WithSocketConnectionFactory(new IPEndPoint(IPAddress.Loopback, 5003))
     //.WithUrl("http://localhost:5000/Chat")
     .AddMessagePackProtocol();
-
-// hub.Services.TryAddEnumerable(ServiceDescriptor.Singleton<IHubProtocol, MessagePackHubProtocol1>());
-// hub.Services.Configure<MessagePackHubProtocolOptions>(s => { });
 
 var connection = hub.Build();
 
