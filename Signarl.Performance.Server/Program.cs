@@ -1,23 +1,23 @@
-using RpcServer.Abp;
+using Microsoft.AspNetCore.SignalR;
 using Signarl.Performance.Server;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.WebHost.UseSockets(s =>
+builder.WebHost.ConfigureKestrel(kestrel =>
 {
-    s.WaitForDataBeforeAllocatingBuffer = false;
-    s.UnsafePreferInlineScheduling = false;
+    kestrel.ListenAnyIP(5003, listen =>
+    {
+        listen.UseHub<ChatHub>();
+    });
 });
 
-builder.Services.AddSingleton<ChatHub>();
-
-builder.Services.AddHostedService<PackageHostServer>();
+//builder.Services.AddSingleton<ChatHub>();
 
 builder.Services.AddSignalR()
                 .AddMessagePackProtocol();
 
 var app = builder.Build();
 
-app.MapHub<ChatHub>("/Chat");
+//app.MapHub<ChatHub>("/Chat");
 
 app.Run();

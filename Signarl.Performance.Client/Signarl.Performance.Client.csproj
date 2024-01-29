@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
+        <Nullable>disable</Nullable>
         <OutputType>Exe</OutputType>
         <AssemblyName>Client</AssemblyName>
     </PropertyGroup>
@@ -13,8 +13,17 @@
     </ItemGroup>
 
     <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+    
+    <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.3" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="7.0.5" />
+        <PackageReference Include="SuperSocket.Client" Version="2.0.0-beta.18.421" />
     </ItemGroup>
+
+        <ItemGroup>
+            <RdXmlFile Include="rd.xml"/>
+        </ItemGroup>
 </Project>
 
