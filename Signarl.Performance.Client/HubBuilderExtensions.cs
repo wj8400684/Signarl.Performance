@@ -1,5 +1,7 @@
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
+using Bedrock.Framework;
 using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -9,7 +11,8 @@ namespace Signarl.Performance.Client;
 
 public static class HubBuilderExtensions
 {
-    private const string socketConnectionFactoryTypeName = "Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketConnectionFactory";
+    private const string socketConnectionFactoryTypeName =
+        "Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketConnectionFactory";
 
     /// <summary>
     /// 查找SocketConnectionFactory的类型
@@ -22,7 +25,7 @@ public static class HubBuilderExtensions
         var connectionFactoryType = assembly.GetType(socketConnectionFactoryTypeName);
         return connectionFactoryType ?? throw new NotSupportedException($"找不到类型{socketConnectionFactoryTypeName}");
     }
-    
+
     /// <summary>
     /// 注册SocketConnectionFactory为IConnectionFactory
     /// </summary>
@@ -37,16 +40,25 @@ public static class HubBuilderExtensions
 
         return services.AddSingleton(typeof(IConnectionFactory), factoryType);
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
     /// <param name="hubConnectionBuilder"></param>
     /// <param name="endPoint"></param>
     /// <returns></returns>
-    public static IHubConnectionBuilder WithSocketConnectionFactory(this IHubConnectionBuilder hubConnectionBuilder, EndPoint endPoint)
+    public static IHubConnectionBuilder WithSocketConnectionFactory(this IHubConnectionBuilder hubConnectionBuilder,
+        EndPoint endPoint)
     {
         hubConnectionBuilder.Services.AddSocketConnectionFactory();
+        hubConnectionBuilder.Services.AddSingleton(endPoint);
+        return hubConnectionBuilder;
+    }
+
+    public static IHubConnectionBuilder WithNamedPipeConnectionFactory(this IHubConnectionBuilder hubConnectionBuilder,
+        EndPoint endPoint)
+    {
+        hubConnectionBuilder.Services.AddTransient<IConnectionFactory, NamedPipeConnectionFactory>();
         hubConnectionBuilder.Services.AddSingleton(endPoint);
         return hubConnectionBuilder;
     }

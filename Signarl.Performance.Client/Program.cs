@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Net;
+using Bedrock.Framework;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Signarl.Performance.Client;
@@ -8,8 +9,7 @@ using Signarl.Performance.Core;
 
 //
 var hub = new HubConnectionBuilder()
-    .WithSocketConnectionFactory(new IPEndPoint(IPAddress.Loopback, 5003))
-    //.WithUrl("http://localhost:5000/Chat")
+    .WithNamedPipeConnectionFactory(new NamedPipeEndPoint("ss"))
     .AddMessagePackProtocol();
 
 var connection = hub.Build();

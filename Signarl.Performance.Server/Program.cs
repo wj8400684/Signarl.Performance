@@ -1,21 +1,35 @@
+using System.Net;
+using Bedrock.Framework;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Signarl.Performance.Server;
 
-var builder = WebApplication.CreateBuilder(args);
-
-builder.WebHost.ConfigureKestrel(kestrel =>
+// Manual wire up of the server
+var services = new ServiceCollection();
+services.AddLogging(builder =>
 {
-    kestrel.ListenAnyIP(5003, listen =>
-    {
-        listen.UseHub<ChatHub>();
-    });
+    // builder.SetMinimumLevel(LogLevel.Debug);
+    builder.AddConsole();
 });
 
-builder.Services.AddSignalR()
-                .AddMessagePackProtocol();
+services.AddSignalR().AddMessagePackProtocol();
 
-var app = builder.Build();
+var serviceProvider = services.BuildServiceProvider();
 
-//app.MapHub<ChatHub>("/Chat");
+var server = new ServerBuilder(serviceProvider)
+    .ListenNamedPipe(new NamedPipeEndPoint("ss"), listen => listen.UseHub<ChatHub>())
+    .Build();
 
-app.Run();
+var logger = serviceProvider.GetRequiredService<ILoggerFactory>().CreateLogger<Program>();
+
+await server.StartAsync();
+
+foreach (var ep in server.EndPoints)
+    logger.LogInformation("Listening on {EndPoint}", ep);
+
+var tcs = new TaskCompletionSource();
+Console.CancelKeyPress += (sender, e) => tcs.TrySetResult();
+await tcs.Task;
+
+await server.StopAsync();
