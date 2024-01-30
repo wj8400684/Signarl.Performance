@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Net;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,7 +38,6 @@ var watch = new Stopwatch();
 Console.WriteLine("开始发送数据");
 
 watch.Start();
-
 while (watch.Elapsed.TotalSeconds < 60)
 {
     sendCount++;
