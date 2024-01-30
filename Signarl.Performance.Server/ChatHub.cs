@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.SignalR;
-using RpcServer.Abp;
 using Signarl.Performance.Core;
 
 namespace Signarl.Performance.Server;

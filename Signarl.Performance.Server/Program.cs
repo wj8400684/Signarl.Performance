@@ -11,8 +11,6 @@ builder.WebHost.ConfigureKestrel(kestrel =>
     });
 });
 
-//builder.Services.AddSingleton<ChatHub>();
-
 builder.Services.AddSignalR()
                 .AddMessagePackProtocol();
 
