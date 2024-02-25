@@ -4,7 +4,12 @@ using Signarl.Performance.Core;
 
 namespace Signarl.Performance.Server;
 
-public sealed class ChatHub(ILogger<ChatHub> logger) : Hub
+public interface IOrderApi
+{
+    Task<AddOrderResponse> AddOrderAsync(AddOrderRequest request);
+}
+
+public sealed class ChatHub(ILogger<ChatHub> logger) : Hub<IOrderApi>
 {
     public override Task OnConnectedAsync()
     {
@@ -18,10 +23,12 @@ public sealed class ChatHub(ILogger<ChatHub> logger) : Hub
         return base.OnDisconnectedAsync(exception);
     }
 
-    [HubMethodName("login")]
-    public LoginRespPackage LoginAsync(
-        LoginPackage request)
+    [HubMethodName(Commands.AddOrder)]
+    public async Task<AddOrderResponse> AddOrderAsync(
+        AddOrderRequest request)
     {
-        return new LoginRespPackage(true);
+        var response = await Clients.Client(Context.ConnectionId).AddOrderAsync(request);
+
+        return response;
     }
 }

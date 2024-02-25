@@ -14,8 +14,11 @@ var hub = new HubConnectionBuilder()
 
 var connection = hub.Build();
 
-
-const string LoginCommand = "login";
+connection.On<AddOrderRequest, AddOrderResponse>(Commands.AddOrder, async (request) =>
+{
+    await Task.Delay(1000);
+    return new AddOrderResponse(true);
+});
 
 await connection.StartAsync();
 
@@ -41,9 +44,10 @@ watch.Start();
 while (watch.Elapsed.TotalSeconds < 60)
 {
     sendCount++;
-    await connection.InvokeAsync<LoginRespPackage>(
-        methodName: LoginCommand,
-        arg1: new LoginPackage(Username: "ssss", Password: "ddddd"));
+    var resp = await connection.InvokeAsync<AddOrderResponse>(
+        methodName: Commands.AddOrder,
+        arg1: new AddOrderRequest("ssssss"));
+    break;
 }
 
 watch.Stop();
