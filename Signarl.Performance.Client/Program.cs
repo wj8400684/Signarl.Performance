@@ -8,14 +8,20 @@ using Signarl.Performance.Core;
 
 //
 var hub = new HubConnectionBuilder()
-    .WithSocketConnectionFactory(new IPEndPoint(IPAddress.Loopback, 5003))
-    //.WithUrl("http://localhost:5000/Chat")
+    //.WithSocketConnectionFactory(new IPEndPoint(IPAddress.Loopback, 5003))
+    .WithUrl("ws://localhost:5003/Chat")
     .AddMessagePackProtocol();
 
 var connection = hub.Build();
 
+connection.On<OrderAddRequest, OrderAddResponse>(Commands.OrderAdd, async request =>
+{
+    Console.WriteLine("收到订单");
+    
+    await Task.Delay(1000);
 
-const string LoginCommand = "login";
+    return new OrderAddResponse(true);
+});
 
 await connection.StartAsync();
 
@@ -41,14 +47,22 @@ watch.Start();
 while (watch.Elapsed.TotalSeconds < 60)
 {
     sendCount++;
-    await connection.InvokeAsync<LoginRespPackage>(
-        methodName: LoginCommand,
-        arg1: new LoginPackage(Username: "ssss", Password: "ddddd"));
+
+    using var sources = new CancellationTokenSource(TimeSpan.FromSeconds(150));
+    
+    var resp = await connection.InvokeAsync<OrderAddByIdRequest>(
+        methodName: Commands.OrderAdd,
+        arg1: new OrderAddByIdRequest(ClientId: "ssss", UserId: "ssss"),
+        cancellationToken: sources.Token);
+
+    break;
 }
 
 watch.Stop();
 
 Console.WriteLine($"支持完毕总共发送{sendCount}");
+
+await Task.Delay(1000000);
 
 Console.ReadKey();
 
