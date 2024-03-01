@@ -1,44 +1,44 @@
 using FastEndpoints;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using FastEndpoints.Swagger;
 using Signarl.Performance.Server;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Signarl.Performance.Server.Data;
+using Signarl.Performance.Server.Extensions;
+using Signarl.Performance.Server.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-builder.Services.AddFastEndpoints();
+builder.Services.ConfigureOptions<JsonOptionsSetup>();
+builder.Services.ConfigureOptions<JwtOptionsSetup>();
+builder.Services.ConfigureOptions<AuthenticationOptionsSetup>();
 
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer();
+builder.Services.AddSignalR()
+    .AddMessagePackProtocol();
+
+builder.Services.AddFastEndpoints()
+    .SwaggerDocument();
+
+builder.Services.AddAuthentication()
+    .AddJwtBearer();
 
 builder.Services.AddDbContextPool<ApplicationDbContext>(options =>
     options.UseSqlite(connectionString));
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddJwtTokenProvider();
 
 var app = builder.Build();
-//
-// if (app.Environment.IsDevelopment())
-// {
-//     app.UseSwagger();
-//     app.UseSwaggerUI();
-// }
 
-app.UseFastEndpoints();
+app.UseFastEndpoints()
+    .UseSwaggerGen();
 
 app.UseAuthentication();
 
 app.UseAuthorization();
-
-app.MapControllers();
 
 app.MapHub<ChatHub>("/Chat");
 

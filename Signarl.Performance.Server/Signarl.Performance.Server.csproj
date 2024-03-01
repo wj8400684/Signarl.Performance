@@ -9,6 +9,7 @@
 
     <ItemGroup>
         <PackageReference Include="FastEndpoints" Version="5.23.0" />
+        <PackageReference Include="FastEndpoints.Swagger" Version="5.23.0" />
         <PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="7.0.16" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.2" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="7.0.5" />

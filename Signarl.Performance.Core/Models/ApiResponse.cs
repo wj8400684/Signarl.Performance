@@ -40,4 +40,6 @@ public sealed class ApiResponse<TResultModel>
     {
         return new ApiResponse<TResultModel>(value) { SuccessFul = true };
     }
+
+
 }
