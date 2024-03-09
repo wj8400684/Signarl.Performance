@@ -8,9 +8,9 @@ namespace Signarl.Performance.Server.EndPoints;
 
 [Authorize(Roles = UserRoles.Admin)]
 [HttpGet("/api/user/info")]
-public sealed class SearchEndPoint(UserManager<IdentityUser> userManager) : Endpoint<EmptyRequest, SearchResultModel>
+public sealed class UserSearchEndPoint(UserManager<IdentityUser> userManager) : Endpoint<EmptyRequest, UserSearchResultModel>
 {
-    public override async Task<SearchResultModel> ExecuteAsync(EmptyRequest req, CancellationToken ct)
+    public override async Task<UserSearchResultModel> ExecuteAsync(EmptyRequest req, CancellationToken ct)
     {
         var user = await userManager.GetUserAsync(HttpContext.User);
 
@@ -19,6 +19,6 @@ public sealed class SearchEndPoint(UserManager<IdentityUser> userManager) : Endp
 
         ThrowIfAnyErrors();
 
-        return new SearchResultModel(user!.UserName!);
+        return new UserSearchResultModel(user!.UserName!);
     }
 }

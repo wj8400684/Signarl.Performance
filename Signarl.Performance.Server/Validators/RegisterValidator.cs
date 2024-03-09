@@ -4,7 +4,7 @@ using Signarl.Performance.Core.Models;
 
 namespace Signarl.Performance.Server.Validators;
 
-public sealed class RegisterValidator : Validator<RegisterRequest>
+public sealed class RegisterValidator : Validator<UserRegisterRequest>
 {
     public RegisterValidator()
     {

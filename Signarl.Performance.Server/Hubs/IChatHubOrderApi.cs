@@ -4,5 +4,5 @@ namespace Signarl.Performance.Server;
 
 public interface IChatHubOrderApi
 {
-    Task<OrderAddResponse> OrderAddAsync(OrderAddRequest request, CancellationToken cancellationToken = default);
+    Task<OrderAddResponse> OrderAddAsync(OrderAddRequest request);
 }

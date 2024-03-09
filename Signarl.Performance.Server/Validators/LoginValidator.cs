@@ -4,7 +4,7 @@ using Signarl.Performance.Core.Models;
 
 namespace Signarl.Performance.Server.Validators;
 
-public sealed class LoginValidator : Validator<LoginRequest>
+public sealed class LoginValidator : Validator<UserLoginRequest>
 {
     public LoginValidator()
     {

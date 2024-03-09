@@ -6,15 +6,19 @@ using Microsoft.Extensions.DependencyInjection;
 using Signarl.Performance.Client;
 using Signarl.Performance.Core;
 
+var token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoid3VqdW4iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjdjNzZlZmY2LWJjMDAtNGRhNi05MmEzLTI1ZWU2NjBlYmIwZiIsImp0aSI6IjIzZjNhZjQ3LWRlYWItNGEwNS1iN2IzLTcxYjYxNDgwYWM0YyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6WyJBZG1pbiIsIkNsaWVudCJdLCJleHAiOjE3MTA1OTU1MTYsImlzcyI6Ind1anVuIiwiYXVkIjoid3VqdW4ifQ.asa4oCI4IEkuR__Q8ETNaxNu8p4phVxfGAG_08-4h98";
+
 //
 var hub = new HubConnectionBuilder()
     //.WithSocketConnectionFactory(new IPEndPoint(IPAddress.Loopback, 5003))
-    .WithUrl("ws://localhost:5003/Chat")
+    .WithUrl("ws://localhost:5003/Chat", 
+        option => option.AccessTokenProvider = () => Task.FromResult(token))
     .AddMessagePackProtocol();
 
 var connection = hub.Build();
 
-connection.On<OrderAddRequest, OrderAddResponse>(Commands.OrderAdd, async request =>
+connection.On(Commands.OrderAdd, async (OrderAddRequest request) =>
 {
     Console.WriteLine("收到订单");
     
