@@ -9,6 +9,7 @@ internal sealed class OrderAddCommandHandler(IHubContext<ChatHub, IChatHubOrderA
 {
     public async Task<OrderAddResponse> ExecuteAsync(OrderAddCommand command, CancellationToken ct)
     {
+        return new OrderAddResponse();
         var resp = await hubContext.Clients.Client(command.ConnectionId)
             .OrderAddAsync(new OrderAddRequest());
 

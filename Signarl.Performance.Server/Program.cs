@@ -1,11 +1,8 @@
 using FastEndpoints;
 using FastEndpoints.Swagger;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Signarl.Performance.Server;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Options;
 using Signarl.Performance.Server.Data;
 using Signarl.Performance.Server.Extensions;
 using Signarl.Performance.Server.Options;
